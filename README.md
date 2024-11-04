@@ -104,9 +104,7 @@ We welcome contributions from developers, designers, philosophers, and anyone in
 
 1. **Report Issues**: Found a bug or want to suggest a feature? Open an issue to start the discussion.
 2. **Submit Pull Requests**: See something you can improve? Feel free to submit a pull request with your changes.
-3. **Join the Discussion**: Visit our [discussions page](link-to-discussions) to share your ideas and connect with others in the Essan community.
-
-Check out our [contributing guidelines](link-to-contributing-guidelines) for more information.
+3. **Join the Discussion**: Visit our [Discussions](https://github.com/angrysky56/Essan-AI-symbolic-language/discussions) to ask questions, share ideas, and connect with others exploring the Essan framework!
 
 ## License
 
