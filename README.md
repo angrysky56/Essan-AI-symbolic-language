@@ -110,8 +110,10 @@ The technical stack currently includes:
 - **Three.js** for the 3D graph visualization.
 - **Socket.io** for real-time collaboration.
 
-For more details, see our [development roadmap](https://github.com/angrysky56/Essan-AI-symbolic-language/blob/main/Development%20framework%20Essan%20Nexus%203D%20graph%20.txt).
-
+For more details, see our [development roadmap](https://github.com/angrysky56/Essan-AI-symbolic-language/blob/main/Development%20framework%20Essan%20Nexus%203D%20graph%20.txt)
+#
+[Gemini with 42k token instruction and GPT4 Essan bots conversation with major concept improvements and Roadmap](https://chatgpt.com/share/67287e15-a95c-8012-b5ce-3515ff1eb345)
+#
 ## Future Possibilities
 
 The Essan framework is designed to grow and evolve. Here are some exciting future possibilities:
