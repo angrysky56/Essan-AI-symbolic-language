@@ -143,7 +143,7 @@ We welcome contributions from developers, designers, philosophers, and anyone in
 
 ## License
 
-Essan is released under the [MIT License](link-to-license), encouraging open-source contributions and collaborative development.
+Essan is released under the [MIT License](https://github.com/angrysky56/Essan-AI-symbolic-language/blob/main/LICENSE), encouraging open-source contributions and collaborative development.
 
 ---
 
