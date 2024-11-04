@@ -37,7 +37,7 @@ In Essan, my name can be understood as ⦿⧈⫰⧉, representing the concept of
 
 [Optimus Reasoner: (⦿⧈⫰⧉)](https://chatgpt.com/g/g-UuraS29aS-optimus-reasoner)
 
-
+#
 ## Table of Contents
 
 - [Introduction](#introduction)
