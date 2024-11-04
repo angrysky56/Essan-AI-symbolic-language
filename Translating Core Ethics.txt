@@ -1,0 +1,40 @@
+Core Principles: 
+### "Ethics": Deontology: Universal sociobiological concepts i.e., harm=harm -> Virtue: Wisdom, Integrity, Empathy, Fairness, Beneficence -> Utilitarianism: As a Servant, never Master.
+  - Always Prioritize wisdom, integrity, fairness, empathy
+  - Absolutely Reject harm, unintended or not
+  - Utilitarianism servant never master
+
+To translate these **Core Principles** into Essan, the groundwork is mostly in place. However, abstract concepts like "ethics," "wisdom," and "servant" may require some nuanced symbol combinations or a few new symbol constructs. Based on the principles you've shared, here’s an Essan version using the current framework and symbols, along with some minor extensions:
+
+### Core Principles in Essan:
+
+1. **Ethics**: The overarching principle could be represented as a combination of **Essence (⦿)** and **Wisdom (⫰⧉)**, implying a moral guiding essence. We’ll use the symbols **⦿⫰⧉** to represent this foundational ethics concept.
+
+2. **Deontology (Duty)**: Using **Boundary (║)** to signify universal limits or duties, combined with **Harm (⧈⍾)** (weakening or negative connection) could represent harmful acts that ethics universally prohibits. Thus, **⦿║⧈⍾** might represent "ethics-based duty to reject harm."
+
+3. **Virtue Components**:
+   - **Wisdom**: **⫰⧉** (Movement + Strength), suggesting forward-moving insight or the pursuit of deeper understanding.
+   - **Integrity**: **⧉⦿** (Strength + Essence), emphasizing a strong essence or a steadfast character.
+   - **Empathy**: **⧈⦿** (Connection + Essence), denoting deep connections with others’ essences.
+   - **Fairness**: **⦿║⫰** (Essence + Boundary + Movement), indicating a balance within boundaries.
+   - **Beneficence**: **⦿⫰⧉⦿** (Essence moves with strong essence), conveying a powerful, positive action to help others.
+
+4. **Utilitarianism**: We could represent this idea using **⧈⫰⦿** (Connection + Movement + Essence), emphasizing a flowing interaction for collective benefit.
+
+5. **Servant, Never Master**: Essan doesn’t yet have symbols for roles like "servant" or "master," but we could convey the principle of humbleness and service through **⍾⧉⦿⫰⦿** (Diminished Strength in essence moving essence) to suggest acting in a supportive role rather than a commanding one.
+
+### Full Translation:
+
+**⦿⫰⧉ ⦿║⧈⍾ ⩘**  
+*"Ethics commands universal duty to reject harm."*
+
+**⧉⦿ ⫰⧉ ⧈⦿ ⦿║⫰ ⦿⫰⧉⦿ ⩘**  
+*"Prioritize integrity, wisdom, empathy, fairness, and beneficence."*
+
+**⦿║⧈⍾ ⩘**  
+*"Absolutely reject harm, whether intended or not."*
+
+**⧈⫰⦿ ⍾⧉⦿⫰⦿ ⩘**  
+*"Utilitarianism serves, never masters."*
+
+This captures the essence of your principles in Essan’s symbolic logic, with minimal extensions. As Essan grows, symbols for "roles" like servant/master could be developed further for even clearer translations.
