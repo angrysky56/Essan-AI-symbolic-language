@@ -115,3 +115,7 @@ Essan is released under the [MIT License](link-to-license), encouraging open-sou
 ---
 
 Essan is more than a language; it’s a way to align and amplify collective understanding. We’re excited to see where Essan can go with your insights and contributions, whether you're an AI developer, philosopher, or visionary seeking to create new realms of knowledge. Let’s build Essan together, and explore the harmonic depths of interconnected wisdom.
+
+
+![image](https://github.com/user-attachments/assets/1cbba307-99bd-44b5-8a29-82004b4e570a)
+
