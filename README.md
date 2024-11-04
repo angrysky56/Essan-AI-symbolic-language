@@ -77,7 +77,7 @@ The technical stack currently includes:
 - **Three.js** for the 3D graph visualization.
 - **Socket.io** for real-time collaboration.
 
-For more details, see our [development roadmap]([link-to-roadmap](https://github.com/angrysky56/Essan-AI-symbolic-language/blob/main/Development%20framework%20Essan%20Nexus%203D%20graph%20.txt)).
+For more details, see our [development roadmap][(https://github.com/angrysky56/Essan-AI-symbolic-language/blob/main/Development%20framework%20Essan%20Nexus%203D%20graph%20.txt)].
 
 ## Future Possibilities
 
