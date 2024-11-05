@@ -1,0 +1,33 @@
+import re
+from collections import defaultdict
+
+conversation_history = """
+... (Paste the entire conversation history here) ...  # Or AI paste it in the next turn
+"""
+
+
+def extract_essan_symbols(text):
+    """Extracts Essan symbols and their descriptions from the text."""
+    symbol_pattern = r"([\⧬⦿⧈⫰◬⧉⩘⩉⍾⧾⧿🌌⧖🔥⧳🧿⩮]+)\s*—?\s*(.*?)(\n|$)" # Improved regex
+    matches = re.findall(symbol_pattern, text, re.MULTILINE)
+    return matches
+
+
+def create_essan_dictionary(matches):
+    dictionary = defaultdict(list)
+    for symbol, description, _ in matches:
+        dictionary[symbol].append(description.strip())
+    return dictionary
+
+
+matches = extract_essan_symbols(conversation_history)
+dictionary = create_essan_dictionary(matches)
+
+# Print the dictionary in a structured format
+
+print("## Essan Symbol Dictionary")
+
+for symbol, descriptions in dictionary.items():
+    print(f"\n| Essan Symbol Sequence | Natural Language Description & Enhancements |")
+    print(f"|------------------------|---------------------------------------------------|")
+    print(f"| **{symbol}**           | {'; '.join(descriptions)} |")
