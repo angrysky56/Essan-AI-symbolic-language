@@ -30,6 +30,7 @@ except OSError:
 
 
 
+
 def get_synonyms(word):
     try:
         synonyms = []
@@ -137,11 +138,14 @@ def calculate_fitness(symbol_chain, task_description, modified_task_description,
 
     return fitness
 
-def generate_initial_population(population_size, symbol_set, min_length=5, max_length=20):
-    """Generates the initial population of symbol chains."""
-
+def generate_initial_population(population_size, symbol_set, min_length=5, max_length=20, seed_chains=None):
+    """Generates the initial population, including optional seed chains."""
     population = []
-    for _ in range(population_size):
+    if seed_chains:
+        population.extend(seed_chains)  # Adds all of the seed chains first
+    
+    num_random = population_size - len(population)  # Calculates the number of random chains needed
+    for _ in range(max(0, num_random)):  # Ensures non-negative range
         chain_length = random.randint(min_length, max_length)
         symbol_chain = "".join(random.choice(symbol_set) for _ in range(chain_length))
         population.append(symbol_chain)
@@ -200,7 +204,6 @@ def contextual_crossover(parent1, parent2, task_description):
 
 
 
-
 def mutate(symbol_chain, symbol_set, mutation_rate=0.1):
     """Introduces random mutations."""
     mutated_chain = ""
@@ -212,7 +215,6 @@ def mutate(symbol_chain, symbol_set, mutation_rate=0.1):
     return mutated_chain
 
 
-
 def adaptive_mutation(symbol_chain, symbol_set, fitness, mutation_rate_range=(0.05, 0.2)):
     """Adapts the mutation rate based on fitness."""
     min_rate, max_rate = mutation_rate_range
@@ -220,6 +222,18 @@ def adaptive_mutation(symbol_chain, symbol_set, fitness, mutation_rate_range=(0.
     mutation_rate = max_rate - (normalized_fitness * (max_rate - min_rate))
     return mutate(symbol_chain, symbol_set, mutation_rate)
 
+def symbol_block_mutation(symbol_chain, symbol_set, block_size=3, mutation_rate=0.1):
+    """Mutates blocks of symbols."""
+    mutated_chain = ""
+    i = 0
+    while i < len(symbol_chain):
+        if random.random() < mutation_rate and i + block_size <= len(symbol_chain):  # Check if current position has space for a block mutation
+            mutated_chain += "".join(random.choice(symbol_set) for _ in range(block_size))
+            i += block_size
+        else:
+            mutated_chain += symbol_chain[i]
+            i += 1
+    return mutated_chain
 
 
 def select_parents(population, fitnesses, num_parents=2):
@@ -242,12 +256,14 @@ def select_parents(population, fitnesses, num_parents=2):
 
 def run_genetic_algorithm(task_description, modified_task_description, weights, 
                          population_size=50, num_generations=100, 
-                         symbol_set=None, mutation_rate_range=(0.05, 0.2)):
+                         symbol_set=None, mutation_rate_range=(0.05, 0.2),
+                         seed_chains=None, use_block_mutation=False):  # Add seed_chains, use_block_mutation
+
 
     if symbol_set is None:
         symbol_set = list(ESSAN_SYMBOL_KEYWORDS.keys())
 
-    population = generate_initial_population(population_size, symbol_set)
+    population = generate_initial_population(population_size, symbol_set, seed_chains=seed_chains) # Essan Aware Initialization
     
     for generation in range(num_generations):
         fitnesses = [calculate_fitness(chain, task_description, modified_task_description, weights) 
@@ -257,18 +273,19 @@ def run_genetic_algorithm(task_description, modified_task_description, weights,
         for _ in range(population_size // 2):
             parents = select_parents(population, fitnesses)
 
-            if parents and len(parents) >= 2:  # Ensure enough parents for crossover
+            if parents and len(parents) >= 2:
                 children = contextual_crossover(parents[0], parents[1], task_description)
                 for child in children:
-                    
                     child_fitness = calculate_fitness(child, task_description, modified_task_description, weights)
-                    mutated_child = adaptive_mutation(child, symbol_set, child_fitness, mutation_rate_range)
+                    if use_block_mutation:
+                        mutated_child = symbol_block_mutation(child, symbol_set)
+                    else:
+                        mutated_child = adaptive_mutation(child, symbol_set, child_fitness, mutation_rate_range)
+
                     new_population.append(mutated_child)
 
 
-        if new_population:
-            population = new_population
-
+        population = new_population if new_population else population  # Check if new population empty
 
     fitnesses = [calculate_fitness(chain, task_description, modified_task_description, weights) for chain in population]
 
@@ -276,7 +293,7 @@ def run_genetic_algorithm(task_description, modified_task_description, weights,
         best_chain = population[fitnesses.index(max(fitnesses))]
         return best_chain
     else:
-        return None # Explicitly return None if no chains generated
+        return None
 
 def experiment(task_description, modified_task_description, weights, param_combinations):
     results = []
@@ -358,6 +375,8 @@ if __name__ == "__main__":
     num_generations = [50, 75, 100]
     mutation_rates = [0.05, 0.1, 0.15]
     param_combinations = list(itertools.product(population_sizes, num_generations, mutation_rates))
+
+    SEED_CHAINS = ["⧬⦿⧈⫰⧉⩘", "⧿⦿⧈⫰◬⧉⩘", "⧾⦿⧉"]  # Essan Aware Initialization
 
     all_results = {}
     for task, (modified_task, weights) in tasks.items():
