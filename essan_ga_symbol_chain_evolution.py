@@ -29,9 +29,16 @@ except OSError:
 
 
 
-
-
 def get_synonyms(word):
+    """
+    Retrieves synonyms for a given word using the WordNet corpus.
+
+    Args:
+        word (str): The word to find synonyms for.
+
+    Returns:
+        set: A set of synonyms for the word, or the word itself if no synonyms are found.
+    """
     try:
         synonyms = []
         synsets = wordnet.synsets(word)
@@ -49,6 +56,7 @@ def get_synonyms(word):
         print(f"Error getting synonyms for {word}: {e}")
         return {word}  # Return original word if an error occurs
 
+# Dictionary mapping symbols to keywords that are used in the semantic evaluation of symbol chains
 ESSAN_SYMBOL_KEYWORDS = {
     "⨿": ["essence", "core", "being", "entity", "concept", "identity"],
     "⧈": ["connect", "relate", "link", "join", "combine", "interact", "network", "relationship", "bond", "synergy"],
@@ -65,9 +73,17 @@ ESSAN_SYMBOL_KEYWORDS = {
 }
 
 
-
 def calculate_task_accuracy(symbol_chain, task_description):
-    """Evaluates semantic alignment using NLP."""
+    """
+    Evaluates how semantically aligned a symbol chain is with a given task description.
+
+    Args:
+        symbol_chain (str): The chain of symbols being evaluated.
+        task_description (str): The description of the task.
+
+    Returns:
+        float: The semantic alignment score between 0 and 1.
+    """
     try:
         doc = nlp(task_description.lower())
         task_elements = [token.lemma_ for token in doc if not token.is_stop and token.is_alpha]
@@ -90,21 +106,56 @@ def calculate_task_accuracy(symbol_chain, task_description):
 
 
 def calculate_efficiency(symbol_chain):
-    """Evaluates efficiency based on length."""
+    """
+    Evaluates efficiency based on the length of the symbol chain.
+
+    Args:
+        symbol_chain (str): The chain of symbols.
+
+    Returns:
+        float: A score representing efficiency (1/length of the chain).
+    """
     return 1 / len(symbol_chain) if symbol_chain else 0
 
 def calculate_adaptability(symbol_chain, original_task, modified_task):
-    """Evaluates adaptability by comparing accuracy on different tasks."""
+    """
+    Evaluates adaptability by comparing the accuracy of the symbol chain for different tasks.
+
+    Args:
+        symbol_chain (str): The chain of symbols.
+        original_task (str): Original task description.
+        modified_task (str): Modified version of the task.
+
+    Returns:
+        float: The adaptability score between 0 and 1.
+    """
     original_accuracy = calculate_task_accuracy(symbol_chain, original_task)
     modified_accuracy = calculate_task_accuracy(symbol_chain, modified_task)
     return (original_accuracy + modified_accuracy) / 2
 
 def calculate_recursive_depth(symbol_chain):
-    """Evaluates presence of recursive symbols."""
+    """
+    Evaluates the presence of recursive symbols in the symbol chain.
+
+    Args:
+        symbol_chain (str): The chain of symbols.
+
+    Returns:
+        int: A score of either 0 or 1 based on whether recursion is present.
+    """
     return min(symbol_chain.count("⧿"), 1)  # Max score of 1 for recursion
 
 def calculate_user_satisfaction(symbol_chain, task_description):
-    """Simulates user satisfaction (can be replaced with actual feedback)."""
+    """
+    Simulates user satisfaction with the symbol chain.
+
+    Args:
+        symbol_chain (str): The chain of symbols.
+        task_description (str): The description of the task.
+
+    Returns:
+        float: A score between 0 and 1 representing user satisfaction.
+    """
     accuracy = calculate_task_accuracy(symbol_chain, task_description)
     length_preference = 0.9 if len(symbol_chain) < 15 else 0.7
     recursion_present = 0.95 if "⧿" in symbol_chain else 0.8
@@ -115,20 +166,28 @@ def calculate_user_satisfaction(symbol_chain, task_description):
                     0.2 * recursion_present +
                     0.1 * diversity)
 
-    satisfaction += random.uniform(-0.1, 0.1) # Add some randomness
-    return max(0, min(1, satisfaction)) # Keep score between 0 and 1
-
+    satisfaction += random.uniform(-0.1, 0.1)  # Add some randomness
+    return max(0, min(1, satisfaction))  # Keep score between 0 and 1
 
 
 def calculate_fitness(symbol_chain, task_description, modified_task_description, weights):
-    """Calculates the overall fitness score."""
+    """
+    Calculates the overall fitness score for a symbol chain based on multiple metrics.
 
+    Args:
+        symbol_chain (str): The chain of symbols.
+        task_description (str): The task description.
+        modified_task_description (str): A modified version of the task description.
+        weights (dict): Weights assigned to each metric for calculating fitness.
+
+    Returns:
+        float: The overall fitness score.
+    """
     accuracy = calculate_task_accuracy(symbol_chain, task_description)
     efficiency = calculate_efficiency(symbol_chain)
     adaptability = calculate_adaptability(symbol_chain, task_description, modified_task_description)
     recursion = calculate_recursive_depth(symbol_chain)
     user_satisfaction = calculate_user_satisfaction(symbol_chain, task_description)
-
 
     fitness = (weights["accuracy"] * accuracy +
                weights["efficiency"] * efficiency +
@@ -139,7 +198,19 @@ def calculate_fitness(symbol_chain, task_description, modified_task_description,
     return fitness
 
 def generate_initial_population(population_size, symbol_set, min_length=5, max_length=20, seed_chains=None):
-    """Generates the initial population, including optional seed chains."""
+    """
+    Generates the initial population of symbol chains, including optional seed chains.
+
+    Args:
+        population_size (int): The size of the population to generate.
+        symbol_set (list): List of symbols available to use in the chains.
+        min_length (int): Minimum length of the symbol chains.
+        max_length (int): Maximum length of the symbol chains.
+        seed_chains (list, optional): Pre-defined symbol chains to include in the initial population.
+
+    Returns:
+        list: A list of generated symbol chains.
+    """
     population = []
     if seed_chains:
         population.extend(seed_chains)  # Adds all of the seed chains first
@@ -152,9 +223,18 @@ def generate_initial_population(population_size, symbol_set, min_length=5, max_l
     return population
 
 def crossover(parent1, parent2):
-    """Basic crossover operation (fallback)."""
+    """
+    Performs a basic crossover operation between two parent symbol chains.
+
+    Args:
+        parent1 (str): The first parent symbol chain.
+        parent2 (str): The second parent symbol chain.
+
+    Returns:
+        tuple: Two child symbol chains resulting from the crossover.
+    """
     if not parent1 or not parent2:
-        return "", "" # return better defaults to prevent concatenation issues
+        return "", ""  # Return better defaults to prevent concatenation issues
 
     crossover_point = random.randint(1, min(len(parent1), len(parent2)) - 1)
     child1 = parent1[:crossover_point] + parent2[crossover_point:]
@@ -163,8 +243,17 @@ def crossover(parent1, parent2):
 
 
 def contextual_crossover(parent1, parent2, task_description):
-    """Performs crossover at semantically similar points based on task description."""
+    """
+    Performs crossover at semantically similar points based on the task description.
 
+    Args:
+        parent1 (str): The first parent symbol chain.
+        parent2 (str): The second parent symbol chain.
+        task_description (str): The description of the task to guide crossover points.
+
+    Returns:
+        tuple: Two child symbol chains resulting from the crossover.
+    """
     doc = nlp(task_description.lower())
     
     best_similarity = -1 
@@ -203,9 +292,18 @@ def contextual_crossover(parent1, parent2, task_description):
         return crossover(parent1, parent2)
 
 
-
 def mutate(symbol_chain, symbol_set, mutation_rate=0.1):
-    """Introduces random mutations."""
+    """
+    Introduces random mutations to a symbol chain.
+
+    Args:
+        symbol_chain (str): The symbol chain to mutate.
+        symbol_set (list): The set of symbols to use in mutations.
+        mutation_rate (float): Probability of mutation for each symbol.
+
+    Returns:
+        str: The mutated symbol chain.
+    """
     mutated_chain = ""
     for symbol in symbol_chain:
         if random.random() < mutation_rate:
@@ -216,14 +314,36 @@ def mutate(symbol_chain, symbol_set, mutation_rate=0.1):
 
 
 def adaptive_mutation(symbol_chain, symbol_set, fitness, mutation_rate_range=(0.05, 0.2)):
-    """Adapts the mutation rate based on fitness."""
+    """
+    Adapts the mutation rate based on the fitness of the symbol chain.
+
+    Args:
+        symbol_chain (str): The symbol chain to mutate.
+        symbol_set (list): The set of symbols to use in mutations.
+        fitness (float): Fitness score of the symbol chain.
+        mutation_rate_range (tuple): The minimum and maximum range for mutation rates.
+
+    Returns:
+        str: The mutated symbol chain.
+    """
     min_rate, max_rate = mutation_rate_range
     normalized_fitness = max(0, min(1, fitness))  # Ensure fitness is in [0, 1]
     mutation_rate = max_rate - (normalized_fitness * (max_rate - min_rate))
     return mutate(symbol_chain, symbol_set, mutation_rate)
 
 def symbol_block_mutation(symbol_chain, symbol_set, block_size=3, mutation_rate=0.1):
-    """Mutates blocks of symbols."""
+    """
+    Mutates blocks of symbols within the symbol chain.
+
+    Args:
+        symbol_chain (str): The symbol chain to mutate.
+        symbol_set (list): The set of symbols to use in mutations.
+        block_size (int): The size of the block to mutate at once.
+        mutation_rate (float): Probability of mutation for each block.
+
+    Returns:
+        str: The mutated symbol chain.
+    """
     mutated_chain = ""
     i = 0
     while i < len(symbol_chain):
@@ -237,8 +357,17 @@ def symbol_block_mutation(symbol_chain, symbol_set, block_size=3, mutation_rate=
 
 
 def select_parents(population, fitnesses, num_parents=2):
-    """Selects parents using tournament selection."""
+    """
+    Selects parents using tournament selection.
 
+    Args:
+        population (list): The list of symbol chains.
+        fitnesses (list): The fitness scores corresponding to each symbol chain.
+        num_parents (int): Number of parents to select.
+
+    Returns:
+        list: The selected parents.
+    """
     if not population or not fitnesses or len(population) < num_parents:
         return []  # Return empty list if invalid input
     
@@ -257,13 +386,28 @@ def select_parents(population, fitnesses, num_parents=2):
 def run_genetic_algorithm(task_description, modified_task_description, weights, 
                          population_size=50, num_generations=100, 
                          symbol_set=None, mutation_rate_range=(0.05, 0.2),
-                         seed_chains=None, use_block_mutation=False):  # Add seed_chains, use_block_mutation
+                         seed_chains=None, use_block_mutation=False):
+    """
+    Runs the genetic algorithm to evolve symbol chains for a given task.
 
+    Args:
+        task_description (str): Original task description.
+        modified_task_description (str): Modified version of the task description.
+        weights (dict): Weights assigned to each metric for calculating fitness.
+        population_size (int, optional): The size of the population to generate.
+        num_generations (int, optional): Number of generations to evolve.
+        symbol_set (list, optional): Set of symbols available to use in the chains.
+        mutation_rate_range (tuple, optional): Minimum and maximum mutation rate range.
+        seed_chains (list, optional): Pre-defined symbol chains to include in the initial population.
+        use_block_mutation (bool, optional): Whether to use block mutation.
 
+    Returns:
+        str: The best symbol chain found.
+    """
     if symbol_set is None:
         symbol_set = list(ESSAN_SYMBOL_KEYWORDS.keys())
 
-    population = generate_initial_population(population_size, symbol_set, seed_chains=seed_chains) # Essan Aware Initialization
+    population = generate_initial_population(population_size, symbol_set, seed_chains=seed_chains)  # Essan Aware Initialization
     
     for generation in range(num_generations):
         fitnesses = [calculate_fitness(chain, task_description, modified_task_description, weights) 
@@ -284,7 +428,6 @@ def run_genetic_algorithm(task_description, modified_task_description, weights,
 
                     new_population.append(mutated_child)
 
-
         population = new_population if new_population else population  # Check if new population empty
 
     fitnesses = [calculate_fitness(chain, task_description, modified_task_description, weights) for chain in population]
@@ -296,6 +439,18 @@ def run_genetic_algorithm(task_description, modified_task_description, weights,
         return None
 
 def experiment(task_description, modified_task_description, weights, param_combinations):
+    """
+    Runs experiments to evaluate genetic algorithm performance with different parameters.
+
+    Args:
+        task_description (str): Original task description.
+        modified_task_description (str): Modified version of the task description.
+        weights (dict): Weights assigned to each metric for calculating fitness.
+        param_combinations (list): Combinations of parameters to test.
+
+    Returns:
+        list: A list of tuples containing parameter combinations and corresponding best fitness scores.
+    """
     results = []
     for params in param_combinations:
         pop_size, num_gens, mut_rate = params
@@ -308,8 +463,16 @@ def experiment(task_description, modified_task_description, weights, param_combi
 
 
 
-
 def plot_avg_vs_param(results, param_index, param_name, task_name):
+    """
+    Plots the average fitness score against a specified parameter.
+
+    Args:
+        results (list): The results containing parameter combinations and fitness scores.
+        param_index (int): Index of the parameter to plot.
+        param_name (str): The name of the parameter.
+        task_name (str): The name of the task for labeling the plot.
+    """
     param_values = sorted(list(set([params[param_index] for params, _ in results])))
     avg_fitness_by_param = []
 
@@ -317,7 +480,6 @@ def plot_avg_vs_param(results, param_index, param_name, task_name):
         fitnesses = [fitness for params, fitness in results if params[param_index] == value]
         avg_fitness = np.mean(fitnesses) if fitnesses else 0
         avg_fitness_by_param.append(avg_fitness)
-
 
     plt.figure(figsize=(10, 6))  # Adjust figure size for better readability
     plt.plot(param_values, avg_fitness_by_param, marker='o', linestyle='-')
@@ -331,6 +493,17 @@ def plot_avg_vs_param(results, param_index, param_name, task_name):
 
 
 def plot_heatmap(results, task_name, param1_index, param2_index, param1_name, param2_name):
+    """
+    Plots a heatmap of average fitness scores for combinations of two parameters.
+
+    Args:
+        results (list): The results containing parameter combinations and fitness scores.
+        task_name (str): The name of the task for labeling the plot.
+        param1_index (int): Index of the first parameter.
+        param2_index (int): Index of the second parameter.
+        param1_name (str): The name of the first parameter.
+        param2_name (str): The name of the second parameter.
+    """
     param1_values = sorted(list(set([params[param1_index] for params, _ in results])))
     param2_values = sorted(list(set([params[param2_index] for params, _ in results])))
 
@@ -343,14 +516,14 @@ def plot_heatmap(results, task_name, param1_index, param2_index, param1_name, pa
             avg_fitness = np.mean(fitnesses) if fitnesses else 0
             fitness_matrix[i, j] = avg_fitness
 
-    plt.figure(figsize=(10, 6)) # Adjust figure size for better readability
+    plt.figure(figsize=(10, 6))  # Adjust figure size for better readability
     plt.imshow(fitness_matrix, cmap='viridis', interpolation='nearest')
     plt.colorbar(label='Average Fitness')
     plt.title(f"Average Fitness: {param1_name} vs. {param2_name}\n({task_name})", fontsize=14)  # Larger title
     plt.xticks(np.arange(len(param2_values)), param2_values, fontsize=10)  # Larger ticks
     plt.yticks(np.arange(len(param1_values)), param1_values, fontsize=10)
-    plt.xlabel(param2_name, fontsize=12) # Larger label
-    plt.ylabel(param1_name, fontsize=12) # Larger label
+    plt.xlabel(param2_name, fontsize=12)  # Larger label
+    plt.ylabel(param1_name, fontsize=12)  # Larger label
     plt.show()
 
 # Main execution block
